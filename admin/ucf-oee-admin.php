@@ -125,14 +125,15 @@ class UCF_OEE_Admin {
 		);
 
 		$fields[] = array(
-			'key'          => 'ucf_oee_forms_to_export',
-			'label'        => 'Forms to Export',
-			'name'         => 'ucf_oee_forms_to_export',
-			'type'         => 'forms',
-			'instructions' => 'Select the forms to export entries from.',
-			'required'     => 0,
-			'allow_null'   => 0,
-			'multiple'     => 1
+			'key'           => 'ucf_oee_forms_to_export',
+			'label'         => 'Forms to Export',
+			'name'          => 'ucf_oee_forms_to_export',
+			'type'          => 'forms',
+			'instructions'  => 'Select the forms to export entries from.',
+			'required'      => 0,
+			'allow_null'    => 0,
+			'multiple'      => 1,
+			'return_format' => 'id',
 		);
 
 		/**
