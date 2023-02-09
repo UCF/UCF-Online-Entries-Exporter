@@ -286,7 +286,7 @@ class UCF_OEE_Exporter {
 	 */
 	private function field_label_formatted( $field_name ) {
 		return str_replace(
-			' ',
+			array( ' ', '?', ':', '(', ')', '.', '_', ','),
 			'',
 			strtolower( $field_name )
 		);
