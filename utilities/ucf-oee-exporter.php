@@ -125,6 +125,10 @@ class UCF_OEE_Exporter {
 					);
 				}
 
+				$entry_count = count( $entries );
+
+				WP_CLI::debug( "Entry count {$entry_count}" );
+
 				foreach( $entries as $entry ) {
 					$this->write_to_external_db( $entry, $mappings, $form_id );
 				}
@@ -144,6 +148,14 @@ class UCF_OEE_Exporter {
 	public function results() {
 		$data_items = array();
 
+		$totals = array(
+			'form'      => 'Total',
+			'processed' => 0,
+			'written'   => 0,
+			'skipped'   => 0,
+			'errors'    => 0
+		);
+
 		foreach( $this->results as $result_set ) {
 			$data_items[] = array(
 				'form' => $result_set['form_title'],
@@ -152,6 +164,25 @@ class UCF_OEE_Exporter {
 				'skipped' => $result_set['entries_skipped'],
 				'errors'  => $result_set['entries_error']
 			);
+
+			$totals['processed'] += $result_set['entries_processed'];
+			$totals['written'] += $result_set['entries_written'];
+			$totals['skipped'] += $result_set['entries_skipped'];
+			$totals['errors'] += $result_set['entries_error'];
+		}
+
+		if ( count( $this->results ) > 0 ) {
+			// Add empty line
+			$data_items[] = array(
+				'form'      => '',
+				'processed' => '',
+				'written'   => '',
+				'skipped'   => '',
+				'errors'    => ''
+			);
+
+			// Add totals
+			$data_items[] = $totals;
 		}
 
 		if ( count( $this->schema_errors ) > 0 ) {
