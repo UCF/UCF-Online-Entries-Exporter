@@ -125,10 +125,6 @@ class UCF_OEE_Exporter {
 					);
 				}
 
-				$entry_count = count( $entries );
-
-				WP_CLI::debug( "Entry count {$entry_count}" );
-
 				foreach( $entries as $entry ) {
 					$this->write_to_external_db( $entry, $mappings, $form_id );
 				}
