@@ -91,14 +91,14 @@ class UCF_OEE_Exporter {
 			}
 
 			$total_count = GFAPI::count_entries(
-				array( $form ),
+				$form_id,
 				$search_args
 			);
 
 			WP_CLI::log( "Exporting {$total_count} entries for form \"{$form['title']}\"..." );
 
 			$entries = GFAPI::get_entries(
-				array( $form_id ),
+				$form_id,
 				$search_args
 			);
 
