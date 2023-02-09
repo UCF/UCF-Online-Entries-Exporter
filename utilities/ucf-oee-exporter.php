@@ -381,8 +381,6 @@ class UCF_OEE_Exporter {
 			} else {
 				$this->results[$form_id]['entries_written'] += 1;
 			}
-
-			WP_CLI::debug( "Record $record_id created!" );
 		} else {
 			$this->results[$form_id]['entries_skipped'] += 1;
 		}
