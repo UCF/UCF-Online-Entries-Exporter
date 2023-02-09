@@ -14,6 +14,7 @@ class UCF_OEE_Exporter {
 		$use_ssl,
 		$start_date_time,
 		$end_date_time,
+		$entries_per_page = 20,
 		$conn,
 		$results = array(),
 		$schema_errors = array();
@@ -34,10 +35,11 @@ class UCF_OEE_Exporter {
 		$this->mysql_user = $connection_info['user'] ?: null;
 		$this->mysql_pass = $connection_info['pass'] ?: null;
 		$this->mysql_name = $connection_info['name'] ?: null;
+		$this->mysql_table = $table_name ?: null;
 		$this->use_ssl    = $connection_info['ssl'] ?: false;
 		$this->start_date_time = $start_date_time;
 		$this->end_date_time = $end_date_time;
-		$this->mysql_table = $table_name ?: null;
+		$this->entries_per_page = 20;
 		$this->forms = $forms ?: array();
 
 		$this->conn = new ssl_wpdb(
@@ -102,10 +104,8 @@ class UCF_OEE_Exporter {
 				$search_args
 			);
 
-			$entries_per_page = count( $entries );
-
-			$page_count = ( $entries_per_page !== 0 ) ?
-				ceil( $total_count / $entries_per_page ) :
+			$page_count = ( $this->entries_per_page !== 0 ) ?
+				ceil( $total_count / $this->entries_per_page ) :
 				0;
 
 			$this->results[$form_id] = $this->setup_results( $form, $total_count );
@@ -113,8 +113,8 @@ class UCF_OEE_Exporter {
 			for( $page = 0; $page < $page_count; $page++ ) {
 				if ( $page !== 0 ) {
 					$paging_args = array(
-						'offset'    => $page * $entries_per_page,
-						'page_size' => $entries_per_page
+						'offset'    => $page * $this->entries_per_page,
+						'page_size' => $this->entries_per_page
 					);
 
 					$entries = GFAPI::get_entries(
