@@ -183,7 +183,77 @@ class UCF_OEE_Admin {
 
 		acf_add_local_field_group( $options );
 	}
+
+	/**
+	 * Functions that runs when the acf/save_post action is triggered.
+	 * We're using this to make sure the ca.pem file is written to the
+	 * appropriate place in the file system.
+	 *
+	 * @author Jim Barnes
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function on_save_post() {
+		$screen = get_current_screen();
+		if ( strpos( $screen->id, 'ucf-online-entries-exporter' ) > -1 ) {
+			$use_ssl = get_field( 'ucf_oee_database_use_ssl', 'option' );
+			$pem_contents = get_field( 'ucf_oee_database_ca_pem', 'option' );
+
+			self::ensure_ca_pem( $use_ssl, $pem_contents );
+		}
+	}
+
+	/**
+	 * Ensures the ca.pem file for the site is written to the correct
+	 * place and is updated with the option in the database.
+	 *
+	 * @author Jim Barnes
+	 * @since 1.0.0
+	 * @param  bool $use_ssl True/false indicating if SSL should be used
+	 * @param  string $ca_pem_contents The contents of the CA pem file
+	 * @return void
+	 */
+	public static function ensure_ca_pem( $use_ssl, $ca_pem_contents ) {
+		$ca_dir_path = self::get_ca_dir_path();
+		$ca_path = "{$ca_dir_path}ca.pem";
+
+		if ( $use_ssl === false || $ca_pem_contents === '' ) {
+			// This is not a valid SSL configuration or we've disabled it.
+			// Remove the pem file and ensure the use_ssl setting is disabled
+			update_field( 'ucf_oee_database_use_ssl', false, 'option' );
+			if ( file_exists( $ca_path ) ) {
+				wp_delete_file( $ca_path );
+			}
+		} else if ( file_exists( $ca_path ) ) {
+			file_put_contents( $ca_path, $ca_pem_contents );
+		} else if ( ! file_exists( $ca_path ) ) {
+			if ( ! file_exists( $ca_dir_path ) ) {
+				mkdir( $ca_dir_path, 0755, true );
+				file_put_contents( $ca_path, $ca_pem_contents );
+			}
+		}
+	}
+
+	/**
+	 * Returns the path to the CA pem file, or false
+	 * if the file does not exist.
+	 *
+	 * @author Jim Barnes
+	 * @since 1.0.0
+	 * @return string|false
+	 */
+	public static function get_ca_dir_path() {
+		$content_dir = WP_CONTENT_DIR;
+
+		if ( is_multisite() ) {
+			$blog_id = get_current_blog_id();
+			return "{$content_dir}/ucf_oee_entries_exporter/ssl/{$blog_id}/";
+		} else {
+			return "${content_dir}/ucf_oee_entries_exporter/ssl/";
+		}
+	}
 }
 
 add_action( 'init', array( 'UCF_OEE_Admin', 'add_option_page_fields' ), 10, 0 );
 add_action( 'admin_menu', array( 'UCF_OEE_Admin', 'register_options_page' ), 10, 0 );
+add_action( 'acf/save_post', array( 'UCF_OEE_Admin', 'on_save_post' ), 10, 0 );

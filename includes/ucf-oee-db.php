@@ -165,9 +165,7 @@ help you can always visit the WordPress Support Forums.' ),
 
     private function configure_ssl()
     {
-		$ca_path = UCF_OEE__SSL_PATH . 'ca.pem';
-		$ca_string = get_field( 'ucf_oee_database_ca_pem', 'option' );
-		$success = file_put_contents( $ca_path, $ca_string );
+		$ca_path = UCF_OEE_Admin::get_ca_dir_path() . 'ca.pem';
 
 		mysqli_options( $this->dbh, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, true );
         mysqli_ssl_set( $this->dbh, null, null, $ca_path, NULL, NULL );
