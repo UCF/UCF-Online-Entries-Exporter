@@ -34,7 +34,8 @@ class UCF_OEE_Commands extends WP_CLI_Command {
 			'port' => get_field( 'ucf_oee_database_port', 'option' ),
 			'user' => get_field( 'ucf_oee_database_user', 'option' ),
 			'pass' => get_field( 'ucf_oee_database_pass', 'option' ),
-			'name' => get_field( 'ucf_oee_database_name', 'option' )
+			'name' => get_field( 'ucf_oee_database_name', 'option' ),
+			'ssl'  => get_field( 'ucf_oee_database_use_ssl', 'option' )
 		);
 
 		$table_name = get_field( 'ucf_oee_database_table_name', 'option' );
