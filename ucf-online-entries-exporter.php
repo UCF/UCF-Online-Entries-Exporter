@@ -14,10 +14,12 @@ if ( ! defined( 'WPINC' ) ) {
 
 define( 'UCF_OEE__PLUGIN_FILE', __FILE__ );
 define( 'UCF_OEE__PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+define( 'UCF_OEE__SSL_PATH', UCF_OEE__PLUGIN_PATH . 'ssl/' );
 
 include_once UCF_OEE__PLUGIN_PATH . 'admin/ucf-oee-admin.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	include_once UCF_OEE__PLUGIN_PATH . 'includes/ucf-oee-db.php';
 	include_once UCF_OEE__PLUGIN_PATH . 'utilities/ucf-oee-exporter.php';
 	include_once UCF_OEE__PLUGIN_PATH . 'utilities/ucf-oee-purger.php';
 	include_once UCF_OEE__PLUGIN_PATH . 'includes/ucf-oee-wpcli.php';

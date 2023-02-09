@@ -115,6 +115,23 @@ class UCF_OEE_Admin {
 			'required'     => 1
 		);
 
+		$fields[] = array(
+			'key'           => 'ucf_oee_database_use_ssl',
+			'label'         => 'Use SSL',
+			'name'          => 'ucf_oee_database_use_ssl',
+			'type'          => 'true_false',
+			'instructions'  => 'When enabled, mysqli will attempt to connect with SSL',
+			'default_value' => false
+		);
+
+		$fields[] = array(
+			'key'           => 'ucf_oee_database_ca_pem',
+			'label'         => 'CA Pem File',
+			'name'          => 'ucf_oee_database_ca_pem',
+			'type'          => 'textarea',
+			'instructions'  => 'Paste in the contents of the ca.pem certificate file.'
+		);
+
 		/**
 		 * Add fields for the Forms tab
 		 */
