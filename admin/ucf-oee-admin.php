@@ -115,6 +115,23 @@ class UCF_OEE_Admin {
 			'required'     => 1
 		);
 
+		$fields[] = array(
+			'key'           => 'ucf_oee_database_use_ssl',
+			'label'         => 'Use SSL',
+			'name'          => 'ucf_oee_database_use_ssl',
+			'type'          => 'true_false',
+			'instructions'  => 'When enabled, mysqli will attempt to connect with SSL',
+			'default_value' => false
+		);
+
+		$fields[] = array(
+			'key'           => 'ucf_oee_database_ca_pem',
+			'label'         => 'CA Pem File',
+			'name'          => 'ucf_oee_database_ca_pem',
+			'type'          => 'textarea',
+			'instructions'  => 'Paste in the contents of the ca.pem certificate file.'
+		);
+
 		/**
 		 * Add fields for the Forms tab
 		 */
@@ -125,56 +142,15 @@ class UCF_OEE_Admin {
 		);
 
 		$fields[] = array(
-			'key'          => 'ucf_oee_forms_to_export',
-			'label'        => 'Forms to Export',
-			'name'         => 'ucf_oee_forms_to_export',
-			'type'         => 'forms',
-			'instructions' => 'Select the forms to export entries from.',
-			'required'     => 0,
-			'allow_null'   => 0,
-			'multiple'     => 1
-		);
-
-		/**
-		 * Add fields for the Field Mappings tab
-		 */
-		$fields[] = array(
-			'key'          => 'field_mappings_tab',
-			'label'        => 'Field Mappings',
-			'type'         => 'tab'
-		);
-
-		$mapping_subfields = array();
-
-		$mapping_subfields[] = array(
-			'key'          => 'gff_name',
-			'label'        => 'Gravity Form Field Name',
-			'name'         => 'gff_name',
-			'type'         => 'text',
-			'instructions' => 'The name of the field within gravity forms',
-			'required'     => 1
-		);
-
-		$mapping_subfields[] = array(
-			'key'          => 'mysql_field_name',
-			'label'        => 'MySQL Field Name',
-			'name'         => 'mysql_field_name',
-			'type'         => 'text',
-			'instructions' => 'The name of the field to write the data to in MySQL',
-			'required'     => 1
-		);
-
-		$fields[] = array(
-			'key'          => 'ucf_oee_form_fields',
-			'label'        => 'Fields',
-			'name'         => 'ucf_oee_form_fields',
-			'type'         => 'repeater',
-			'instructions' => 'Map the gravity forms field names to the field names in the database export.',
-			'required'     => 1,
-			'collapsed'    => 'gff_name',
-			'layout'       => 'table',
-			'button_label' => 'Add Field Mapping',
-			'sub_fields'   => $mapping_subfields
+			'key'           => 'ucf_oee_forms_to_export',
+			'label'         => 'Forms to Export',
+			'name'          => 'ucf_oee_forms_to_export',
+			'type'          => 'forms',
+			'instructions'  => 'Select the forms to export entries from.',
+			'required'      => 0,
+			'allow_null'    => 0,
+			'multiple'      => 1,
+			'return_format' => 'id',
 		);
 
 		/**
