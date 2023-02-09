@@ -154,48 +154,6 @@ class UCF_OEE_Admin {
 		);
 
 		/**
-		 * Add fields for the Field Mappings tab
-		 */
-		$fields[] = array(
-			'key'          => 'field_mappings_tab',
-			'label'        => 'Field Mappings',
-			'type'         => 'tab'
-		);
-
-		$mapping_subfields = array();
-
-		$mapping_subfields[] = array(
-			'key'          => 'gff_name',
-			'label'        => 'Gravity Form Field Name',
-			'name'         => 'gff_name',
-			'type'         => 'text',
-			'instructions' => 'The name of the field within gravity forms',
-			'required'     => 1
-		);
-
-		$mapping_subfields[] = array(
-			'key'          => 'mysql_field_name',
-			'label'        => 'MySQL Field Name',
-			'name'         => 'mysql_field_name',
-			'type'         => 'text',
-			'instructions' => 'The name of the field to write the data to in MySQL',
-			'required'     => 1
-		);
-
-		$fields[] = array(
-			'key'          => 'ucf_oee_form_fields',
-			'label'        => 'Fields',
-			'name'         => 'ucf_oee_form_fields',
-			'type'         => 'repeater',
-			'instructions' => 'Map the gravity forms field names to the field names in the database export.',
-			'required'     => 1,
-			'collapsed'    => 'gff_name',
-			'layout'       => 'table',
-			'button_label' => 'Add Field Mapping',
-			'sub_fields'   => $mapping_subfields
-		);
-
-		/**
 		 * Add fields for the Record retainment tab
 		 */
 		$fields[] = array(

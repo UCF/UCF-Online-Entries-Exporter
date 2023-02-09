@@ -32,8 +32,10 @@ class UCF_OEE_Exporter {
 		$this->mysql_user = $connection_info['user'] ?: null;
 		$this->mysql_pass = $connection_info['pass'] ?: null;
 		$this->mysql_name = $connection_info['name'] ?: null;
+		$this->start_date_time = $start_date_time;
+		$this->end_date_time = $end_date_time;
 		$this->mysql_table = $table_name ?: null;
-		$this->forms      = $forms ?: array();
+		$this->forms = $forms ?: array();
 
 		$this->conn = new wpdb(
 			$this->mysql_user,
@@ -90,7 +92,9 @@ class UCF_OEE_Exporter {
 
 			$entries_per_page = count( $entries );
 
-			$page_count = ceil( $total_count / $entries_per_page );
+			$page_count = ( $entries_per_page !== 0 ) ?
+				ceil( $total_count / $entries_per_page ) :
+				0;
 
 			$this->results[$form_id] = $this->setup_results( $form, $total_count );
 
