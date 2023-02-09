@@ -118,7 +118,7 @@ class UCF_OEE_Exporter {
 					);
 
 					$entries = GFAPI::get_entries(
-						array( $form ),
+						$form_id,
 						$search_args,
 						array(),
 						$paging_args
