@@ -10,7 +10,7 @@ In order to be able to better work with the data received through Gravity Form e
 
 ## Documentation ##
 
-Head over to the [UCF Online Entries Exporter wiki](https://github.com/UCF/UCF-Online-Entries-Exporter/wiki) for detailed information about this plugin, installation instructions, and more.
+Head over to the [UCF Online Entries Exporter wiki](https://github.com/UCF/UCF-Online-Entries-Exporter/wiki) for detailed information about this plugin, installation instructions, and more. Please, ensure the [required plugins](https://github.com/UCF/UCF-Online-Entries-Exporter/wiki/Required-Plugins) are installed prior to trying to enable the plugin.
 
 
 ## Changelog ##
@@ -40,10 +40,11 @@ n/a
     To enable BrowserSync, set `sync` to `true` and assign `syncTarget` the base URL of a site on your local WordPress instance that will use this plugin, such as `http://localhost/wordpress/my-site/`.  Your `syncTarget` value will vary depending on your local host setup.
 
     The full list of modifiable config values can be viewed in `gulpfile.js` (see `config` variable).
-3. Run `gulp default` to process front-end assets.
-4. If you haven't already done so, create a new WordPress site on your development environment to test this plugin against.
-5. Activate this plugin on your development WordPress site.
-6. Configure plugin settings from the WordPress admin under "Settings > UCF Online Entries Exporter".
+4. Run `gulp default` to process front-end assets.
+5. If you haven't already done so, create a new WordPress site on your development environment to test this plugin against.
+6. Install all the [required plugins](https://github.com/UCF/UCF-Online-Entries-Exporter/wiki/Required-Plugins).
+6. Activate this plugin on your development WordPress site.
+7. Configure plugin settings from the WordPress admin under "Settings > UCF Online Entries Exporter".
 
 ### Other Notes ###
 * This plugin's README.md file is automatically generated. Please only make modifications to the README.txt file, and make sure the `gulp readme` command has been run before committing README changes.  See the [contributing guidelines](https://github.com/UCF/UCF-Online-Entries-Exporter/blob/master/CONTRIBUTING.md) for more information.
