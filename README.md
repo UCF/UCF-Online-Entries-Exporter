@@ -15,6 +15,10 @@ Head over to the [UCF Online Entries Exporter wiki](https://github.com/UCF/UCF-O
 
 ## Changelog ##
 
+### 1.0.1 ###
+Bug Fixes:
+* Updated the schema verification step to deal with empty field labels and corrected some bugs in the final output of those results.
+
 ### 1.0.0 ###
 * Initial release
 
