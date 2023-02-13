@@ -185,16 +185,16 @@ class UCF_OEE_Exporter {
 			$schema_error_items = array();
 
 			foreach( $this->schema_errors as $form ) {
-				$columns_str = implode( "\n", $form['errors'] );
+				$columns_str = implode( ', ', $form['errors'] );
 
 				$schema_error_items[] = array(
 					'form' => $form['form'],
-					'errors' => "The following columns were missing from the target database:\n{$columns_str}"
+					'errors' => "The following columns were missing from the target database: {$columns_str}"
 				);
 			}
 
-			WP_CLI::error( "The following schema errors were found during the export process:" );
-				WP_CLI\Utils\format_items( 'table', $schema_error_items, array( 'form', 'errors' ) );
+			WP_CLI::warning( "The following schema errors were found during the export process:" );
+			WP_CLI\Utils\format_items( 'table', $schema_error_items, array( 'form', 'errors' ) );
 		}
 
 		WP_CLI\Utils\format_items( 'table', $data_items, array( 'form', 'processed', 'written', 'skipped', 'errors' ) );
@@ -214,6 +214,11 @@ class UCF_OEE_Exporter {
 		foreach( $fields as $field ) {
 			$id = strval( $field['id'] );
 			$label = $field['label'];
+
+			if ( ! $label ) {
+				continue;
+			}
+
 			$mapped = $this->field_label_formatted( $label );
 
 			$retval->{ $id } = array(
@@ -250,12 +255,6 @@ class UCF_OEE_Exporter {
 	 * @return bool
 	 */
 	private function verify_columns( $form, $mappings ) {
-		$columns = array();
-
-		foreach( $mappings as $mapping ) {
-			$columns[] = $mapping['mapped'];
-		}
-
 		$column_query = $this->conn->prepare(
 			"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = %s AND TABLE_NAME = %s;",
 			array(
@@ -265,6 +264,8 @@ class UCF_OEE_Exporter {
 		);
 
 		$results = $this->conn->get_results( $column_query );
+
+		$columns = array();
 
 		foreach( $results as $result ) {
 			$columns[] = $result->COLUMN_NAME;
@@ -299,7 +300,7 @@ class UCF_OEE_Exporter {
 			);
 		}
 
-		$this->schema_errors[$form_id['id']]['errors'][] = $column;
+		$this->schema_errors[$form['id']]['errors'][] = $column;
 	}
 
 	/**
