@@ -15,6 +15,11 @@ Head over to the [UCF Online Entries Exporter wiki](https://github.com/UCF/UCF-O
 
 ## Changelog ##
 
+### 1.0.2 ###
+Bug Fixes:
+* Added the --force-updates flag so records can be updated if there's a problem during the previous run.
+* Added logic for multi-input fields, like the name type field that has first, last, prefix, middle, suffix all split out.
+
 ### 1.0.1 ###
 Bug Fixes:
 * Updated the schema verification step to deal with empty field labels and corrected some bugs in the final output of those results.
