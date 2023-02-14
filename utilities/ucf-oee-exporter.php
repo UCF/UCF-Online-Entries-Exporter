@@ -16,6 +16,7 @@ class UCF_OEE_Exporter {
 		$end_date_time,
 		$entries_per_page = 20,
 		$conn,
+		$force_updates = false,
 		$results = array(),
 		$schema_errors = array();
 
@@ -25,11 +26,13 @@ class UCF_OEE_Exporter {
 	 * @since 1.0.0
 	 * @author Jim Barnes
 	 * @param array $connection_info An array containing the connection info for the external MySQL Database
-	 * @param array $table_name The name of the table to write the entries to.
+	 * @param array $table_name The name of the table to write the entries to
 	 * @param array $forms An array of integers containing the form IDs to export
-	 * @param array $mappings An array of field mappings
+	 * @param string $start_date_time The date time of the first entry to retrieve for export
+	 * @param string $end_date_time The date time of the last entry to retrieve for export
+	 * @param bool $force_updates When true, existing updates will be updated
 	 */
-	public function __construct( $connection_info, $table_name = 'online_entries', $forms = array(), $start_date_time, $end_date_time ) {
+	public function __construct( $connection_info, $table_name = 'online_entries', $forms = array(), $start_date_time, $end_date_time, $force_updates = false ) {
 		$this->mysql_host = $connection_info['host'] ?: null;
 		$this->mysql_port = $connection_info['port'] ?: 3306;
 		$this->mysql_user = $connection_info['user'] ?: null;
@@ -41,6 +44,7 @@ class UCF_OEE_Exporter {
 		$this->end_date_time = $end_date_time;
 		$this->entries_per_page = 20;
 		$this->forms = $forms ?: array();
+		$this->force_updates = $force_updates;
 
 		$this->conn = new ssl_wpdb(
 			$this->mysql_user,
@@ -148,6 +152,7 @@ class UCF_OEE_Exporter {
 			'form'      => 'Total',
 			'processed' => 0,
 			'written'   => 0,
+			'updated'   => 0,
 			'skipped'   => 0,
 			'errors'    => 0
 		);
@@ -157,12 +162,14 @@ class UCF_OEE_Exporter {
 				'form' => $result_set['form_title'],
 				'processed' => $result_set['entries_processed'],
 				'written' => $result_set['entries_written'],
+				'updated' => $result_set['entries_updated'],
 				'skipped' => $result_set['entries_skipped'],
 				'errors'  => $result_set['entries_error']
 			);
 
 			$totals['processed'] += $result_set['entries_processed'];
 			$totals['written'] += $result_set['entries_written'];
+			$totals['updated'] += $result_set['entries_updated'];
 			$totals['skipped'] += $result_set['entries_skipped'];
 			$totals['errors'] += $result_set['entries_error'];
 		}
@@ -173,6 +180,7 @@ class UCF_OEE_Exporter {
 				'form'      => '',
 				'processed' => '',
 				'written'   => '',
+				'updated'   => '',
 				'skipped'   => '',
 				'errors'    => ''
 			);
@@ -197,7 +205,7 @@ class UCF_OEE_Exporter {
 			WP_CLI\Utils\format_items( 'table', $schema_error_items, array( 'form', 'errors' ) );
 		}
 
-		WP_CLI\Utils\format_items( 'table', $data_items, array( 'form', 'processed', 'written', 'skipped', 'errors' ) );
+		WP_CLI\Utils\format_items( 'table', $data_items, array( 'form', 'processed', 'written', 'updated', 'skipped', 'errors' ) );
 	}
 
 	/**
@@ -214,9 +222,25 @@ class UCF_OEE_Exporter {
 		foreach( $fields as $field ) {
 			$id = strval( $field['id'] );
 			$label = $field['label'];
+			$input_count = ( $field['inputs'] !== "" ) ?
+				count( $field['inputs'] ):
+				0;
 
 			if ( ! $label ) {
 				continue;
+			}
+
+			if ( $input_count > 0 ) {
+				foreach( $field['inputs'] as $subfield ) {
+					$sub_id = strval( $subfield['id'] );
+					$sub_label = $subfield['label'];
+					$sub_mapping = $this->field_label_formatted( "{$label}{$sub_label}" );
+
+					$retval->{ $sub_id } = array(
+						'label' => $sub_label,
+						'mapped' => $sub_mapping
+					);
+				}
 			}
 
 			$mapped = $this->field_label_formatted( $label );
@@ -336,6 +360,7 @@ class UCF_OEE_Exporter {
 			'form_title'        => $form['title'],
 			'entries_processed' => $total_count,
 			'entries_written'   => 0,
+			'entries_updated'   => 0,
 			'entries_skipped'   => 0,
 			'entries_error'     => 0
 		);
@@ -372,15 +397,33 @@ class UCF_OEE_Exporter {
 		);
 
 		if ( ! (bool) $this->conn->get_var( $exists_query ) ) {
-			$record_id = $this->conn->insert(
+			$rows_inserted = $this->conn->insert(
 				$this->mysql_table,
 				$data
 			);
 
-			if ( $record_id === false ) {
+			if ( $rows_inserted === false ) {
 				$this->results[$form_id]['entries_error'] += 1;
 			} else {
 				$this->results[$form_id]['entries_written'] += 1;
+			}
+		} else if ( $this->force_updates ) {
+			unset( $data['entryid'] );
+
+			$rows_updated = $this->conn->update(
+				$this->mysql_table,
+				$data,
+				array(
+					'entryid' => $entryid
+				)
+			);
+
+			if ( $rows_updated < 1 ) {
+				$this->results[$form_id]['entries_skipped'] += 1;
+			} else if ( $rows_updated === false) {
+				$this->results[$form_id]['entries_error'] += 1;
+			} else {
+				$this->results[$form_id]['entries_updated'] += 1;
 			}
 		} else {
 			$this->results[$form_id]['entries_skipped'] += 1;

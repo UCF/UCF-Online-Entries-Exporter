@@ -11,7 +11,10 @@
  * : The latest entry dates to export.
  *
  * [--form-ids=<form_ids>]
- * : Comma separated list of form ids to export
+ * : Comma separated list of form ids to export.
+ *
+ * [--force-updates=false]
+ * : When true, any existing records will be updated.
  */
 class UCF_OEE_Commands extends WP_CLI_Command {
 	public function export( $args, $assoc_args ) {
@@ -28,6 +31,10 @@ class UCF_OEE_Commands extends WP_CLI_Command {
 				return intval( $value );
 			}, explode( ',', $assoc_args['form-ids'] ) ) :
 			$forms      = get_field( 'ucf_oee_forms_to_export', 'option' );
+
+		$force_updates = isset( $assoc_args['force-updates'] ) ?
+			filter_var( $assoc_args['force-updates'], FILTER_VALIDATE_BOOLEAN ) :
+			false;
 
 		$connection_info = array(
 			'host' => get_field( 'ucf_oee_database_host', 'option' ),
@@ -46,7 +53,8 @@ class UCF_OEE_Commands extends WP_CLI_Command {
 				$table_name,
 				$form_ids,
 				$start_date_time,
-				$end_date_time
+				$end_date_time,
+				$force_updates
 			);
 
 			$exporter->export();
