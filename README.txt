@@ -1,8 +1,8 @@
 === UCF Online Entries Exporter ===
 Contributors: ucfwebcom
 Requires at least: 6.0
-Tested up to: 6.0
-Stable tag: 1.0.2
+Tested up to: 6.1
+Stable tag: 1.0.3
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/copyleft/gpl-3.0.html
@@ -21,6 +21,10 @@ Head over to the [UCF Online Entries Exporter wiki](https://github.com/UCF/UCF-O
 
 
 == Changelog ==
+
+= 1.0.3 =
+Enhancements:
+* Added composer file.
 
 = 1.0.2 =
 Bug Fixes:

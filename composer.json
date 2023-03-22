@@ -1,0 +1,8 @@
+{
+    "name": "ucf/ucf-online-entries-exporter",
+    "description": "Provides a WP CLI command for exporting gravity form entries to an external MySQL database.",
+    "type": "wordpress-plugin",
+    "require": {
+        "composer/installers": "~1.0"
+    }
+}

@@ -15,6 +15,10 @@ Head over to the [UCF Online Entries Exporter wiki](https://github.com/UCF/UCF-O
 
 ## Changelog ##
 
+### 1.0.3 ###
+Enhancements:
+* Added composer file.
+
 ### 1.0.2 ###
 Bug Fixes:
 * Added the --force-updates flag so records can be updated if there's a problem during the previous run.
