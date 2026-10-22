@@ -233,6 +233,13 @@ class UCF_OEE_Exporter {
 				continue;
 			}
 
+			// Display only fields (HTML, section, page, captcha)
+			// never store a value on the entry, so there is nothing to export.
+			if ( ! empty( $field['displayOnly'] ) ) {
+				WP_CLI::debug( "Skipping display only field \"{$label}\" (Field ID {$id})." );
+				continue;
+			}
+
 			if ( $this->is_field_excluded( $field ) ) {
 				WP_CLI::log( "Excluding field \"{$label}\" (Field ID {$id}) from export." );
 				continue;
