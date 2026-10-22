@@ -153,6 +153,16 @@ class UCF_OEE_Admin {
 			'return_format' => 'id',
 		);
 
+		$fields[] = array(
+			'key'           => 'ucf_oee_exclude_class',
+			'label'         => 'Exclude Field CSS Class',
+			'name'          => 'ucf_oee_exclude_class',
+			'type'          => 'text',
+			'instructions'  => 'Form fields with this class in their Custom CSS Class setting will be excluded from the export and schema check. Defaults to "' . UCF_OEE__DEFAULT_EXCLUDE_CLASS . '" when left blank.',
+			'required'      => 0,
+			'default_value' => UCF_OEE__DEFAULT_EXCLUDE_CLASS
+		);
+
 		/**
 		 * Add fields for the Record retainment tab
 		 */

@@ -15,6 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'UCF_OEE__PLUGIN_FILE', __FILE__ );
 define( 'UCF_OEE__PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'UCF_OEE__SSL_PATH', UCF_OEE__PLUGIN_PATH . 'ssl/' );
+define( 'UCF_OEE__DEFAULT_EXCLUDE_CLASS', 'ucf-oee-exclude' );
 
 include_once UCF_OEE__PLUGIN_PATH . 'admin/ucf-oee-admin.php';
 

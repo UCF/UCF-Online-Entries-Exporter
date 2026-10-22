@@ -47,6 +47,8 @@ class UCF_OEE_Commands extends WP_CLI_Command {
 
 		$table_name = get_field( 'ucf_oee_database_table_name', 'option' );
 
+		$exclude_class = get_field( 'ucf_oee_exclude_class', 'option' );
+
 		try {
 			$exporter = new UCF_OEE_Exporter(
 				$connection_info,
@@ -54,7 +56,8 @@ class UCF_OEE_Commands extends WP_CLI_Command {
 				$form_ids,
 				$start_date_time,
 				$end_date_time,
-				$force_updates
+				$force_updates,
+				$exclude_class
 			);
 
 			$exporter->export();

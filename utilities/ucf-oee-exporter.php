@@ -17,6 +17,7 @@ class UCF_OEE_Exporter {
 		$entries_per_page = 20,
 		$conn,
 		$force_updates = false,
+		$exclude_class = UCF_OEE__DEFAULT_EXCLUDE_CLASS,
 		$results = array(),
 		$schema_errors = array();
 
@@ -31,8 +32,9 @@ class UCF_OEE_Exporter {
 	 * @param string $start_date_time The date time of the first entry to retrieve for export
 	 * @param string $end_date_time The date time of the last entry to retrieve for export
 	 * @param bool $force_updates When true, existing updates will be updated
+	 * @param string $exclude_class Fields with this CSS class are excluded from the export
 	 */
-	public function __construct( $connection_info, $table_name = 'online_entries', $forms = array(), $start_date_time, $end_date_time, $force_updates = false ) {
+	public function __construct( $connection_info, $table_name = 'online_entries', $forms = array(), $start_date_time, $end_date_time, $force_updates = false, $exclude_class = null ) {
 		$this->mysql_host = $connection_info['host'] ?: null;
 		$this->mysql_port = $connection_info['port'] ?: 3306;
 		$this->mysql_user = $connection_info['user'] ?: null;
@@ -45,6 +47,7 @@ class UCF_OEE_Exporter {
 		$this->entries_per_page = 20;
 		$this->forms = $forms ?: array();
 		$this->force_updates = $force_updates;
+		$this->exclude_class = trim( $exclude_class ?: '' ) ?: UCF_OEE__DEFAULT_EXCLUDE_CLASS;
 
 		$this->conn = new ssl_wpdb(
 			$this->mysql_user,
@@ -230,6 +233,11 @@ class UCF_OEE_Exporter {
 				continue;
 			}
 
+			if ( $this->is_field_excluded( $field ) ) {
+				WP_CLI::log( "Excluding field \"{$label}\" (Field ID {$id}) from export." );
+				continue;
+			}
+
 			if ( $input_count > 0 ) {
 				foreach( $field['inputs'] as $subfield ) {
 					$sub_id = strval( $subfield['id'] );
@@ -267,6 +275,22 @@ class UCF_OEE_Exporter {
 		);
 
 		return (array) $retval;
+	}
+
+	/**
+	 * Determines if a field has been flagged for exclusion
+	 * from the export via its custom CSS class.
+	 *
+	 * @author Jim Barnes
+	 * @since 1.1.0
+	 * @param GF_Field $field The gravity form field
+	 * @return bool
+	 */
+	private function is_field_excluded( $field ) {
+		$css_class = isset( $field['cssClass'] ) ? $field['cssClass'] : '';
+		$classes = preg_split( '/\s+/', trim( $css_class ) );
+
+		return in_array( $this->exclude_class, $classes );
 	}
 
 	/**
@@ -317,7 +341,7 @@ class UCF_OEE_Exporter {
 	 * @return void
 	 */
 	private function add_schema_error( $form, $column ) {
-		if ( ! in_array( $form['id'], $this->schema_errors ) ) {
+		if ( ! array_key_exists( $form['id'], $this->schema_errors ) ) {
 			$this->schema_errors[$form['id']] = array(
 				'form' => $form['title'],
 				'errors'     => array()
