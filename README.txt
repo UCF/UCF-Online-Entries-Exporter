@@ -2,7 +2,7 @@
 Contributors: ucfwebcom
 Requires at least: 6.0
 Tested up to: 6.1
-Stable tag: 1.0.3
+Stable tag: 1.1.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/copyleft/gpl-3.0.html
@@ -21,6 +21,10 @@ Head over to the [UCF Online Entries Exporter wiki](https://github.com/UCF/UCF-O
 
 
 == Changelog ==
+
+= 1.1.0 =
+Enhancements:
+* Added the ability to exclude fields from the export by the class "ucf-oee-exclude" to the field in Gravity Forms
 
 = 1.0.3 =
 Enhancements:

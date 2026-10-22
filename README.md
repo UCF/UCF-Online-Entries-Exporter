@@ -15,6 +15,10 @@ Head over to the [UCF Online Entries Exporter wiki](https://github.com/UCF/UCF-O
 
 ## Changelog ##
 
+### 1.1.0 ###
+Enhancements:
+* Added the ability to exclude fields from the export by the class "ucf-oee-exclude" to the field in Gravity Forms
+
 ### 1.0.3 ###
 Enhancements:
 * Added composer file.
