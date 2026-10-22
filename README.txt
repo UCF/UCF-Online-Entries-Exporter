@@ -22,6 +22,10 @@ Head over to the [UCF Online Entries Exporter wiki](https://github.com/UCF/UCF-O
 
 == Changelog ==
 
+= 1.1.1 =
+Enhancements:
+* Added logic block that excludes all displayOnly fields from Gravity Forms on export.
+
 = 1.1.0 =
 Enhancements:
 * Added the ability to exclude fields from the export by the class "ucf-oee-exclude" to the field in Gravity Forms
